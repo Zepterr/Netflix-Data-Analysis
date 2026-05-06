@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import gc
 
 st.set_page_config(
     page_title="Netflix Analytics Dashboard",
@@ -144,6 +145,8 @@ def build_recommender(df):
     tfidf = TfidfVectorizer(stop_words='english', max_features=1500)
     matrix = tfidf.fit_transform(features)
     sim = cosine_similarity(matrix, matrix).astype('float32')
+    del matrix
+    gc.collect()
     idx = pd.Series(df.index, index=df['title'].str.lower()).drop_duplicates()
     return sim, idx
 
