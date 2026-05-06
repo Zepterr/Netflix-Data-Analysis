@@ -139,12 +139,11 @@ def build_recommender(df):
     features = (
         df['listed_in'].fillna('') + ' ' +
         df['director'].fillna('') + ' ' +
-        df['cast'].fillna('') + ' ' +
         df['description'].fillna('')
     )
-    tfidf = TfidfVectorizer(stop_words='english', max_features=5000)
+    tfidf = TfidfVectorizer(stop_words='english', max_features=1500)
     matrix = tfidf.fit_transform(features)
-    sim = cosine_similarity(matrix, matrix)
+    sim = cosine_similarity(matrix, matrix).astype('float32')
     idx = pd.Series(df.index, index=df['title'].str.lower()).drop_duplicates()
     return sim, idx
 
